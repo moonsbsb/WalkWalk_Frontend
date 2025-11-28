@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:title="홈" />
+    <item
+        android:id="@+id/startActivity"
+        android:title="산책하기" />
+    <item
+        android:id="@+id/chartFragment"
+        android:title="산책 정보" />
+    <item
+        android:id="@+id/recordFragment"
+        android:title="산책 기록" />
+</menu>

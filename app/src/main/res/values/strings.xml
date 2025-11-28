@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">WALK WALK</string>
+
+    <string name="today_pet">오늘의 %1$s</string>
+
+    <string name="walk">산책하기</string>
+
+    <string name="today_poo">하루 배변</string>
+    <string name="today_meal">하루 식사</string>
+    <string name="today_water">하루 음수 (ml)</string>
+
+    <string name="chart_distance">오늘 산책 거리</string>
+    <string name="chart_time">오늘 산책 시간</string>
+    <string name="chart_walk">부지런히 걸었어요</string>
+    <string name="chart_stop">천천히 걸었어요</string>
+    <string name="chart_activity_time">활동시간</string>
+
+    <string name="chart_water">음수량</string>
+    <string name="chart_poo">배변횟수</string>
+    
+    <string name="today_pic">오늘의 갤러리</string>
+    <string name="pics">갤러리</string>
+
+    <string name="today_walk">오늘의 산책</string>
+
+    <string name="introduce">나의 강아지는?</string>
+
+    <string name="login">로그인</string>
+    <string name="login_error">이메일이나 비밀번호 형식이 잘못되었습니다.</string>
+
+    <string name="update_account">내 정보 수정하기</string>
+    
+    <string name="password">비밀번호</string>
+    <string name="password_check">비밀번호를 입력하세요</string>
+    <string name="password_check_add">비밀번호를 다시 입력하세요</string>
+    <string name="password_wrong">비밀번호가 일치하지않습니다</string>
+
+    <string name="name">이름</string>
+    <string name="name_check">이름을 입력하세요</string>
+    <string name="weight">몸무게</string>
+    <string name="weight_check">몸무게를 입력하세요</string>
+    <string name="age">나이</string>
+    <string name="age_check">나이를 입력하세요</string>
+    <string name="birth">생일</string>
+    <string name="birth_check">생일을 입력하세요</string>
+
+    <string name="store_email">이메일 저장하기</string>
+
+    <string name="privacy_confirm">개인정보 수집 및 이용에 대한 동의</string>
+    
+    <string name="email">이메일</string>
+    <string name="email_info">입력하신 이메일로 인증 번호를 보내드립니다.</string>
+    <string name="certification_number">가입하신 이메일로 인증번호를 보냈습니다\n인증번호 6자리를 입력해주세요!</string>
+    <string name="certification_wrong">인증번호가 옳지않습니다!</string>
+
+    <string name="ok">확인</string>
+    <string name="go_login">로그인 하러가기</string>
+
+    <string name="password_reset_text">비밀번호 재설정</string>
+
+    <string name="password_reset_complete">비밀변호 변경 완료!</string>
+    <string name="move_to_login">로그인 화면으로 이동합니다</string>
+    
+    <string name="delete_complete">탈퇴 처리가 완료되었습니다!</string>
+    <string name="delete_thanks">이용해주셔서 감사합니다</string>
+</resources>
