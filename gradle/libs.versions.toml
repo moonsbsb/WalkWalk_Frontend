@@ -9,12 +9,14 @@ appcompat = "1.7.1"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
-roomCommonJvm = "2.7.1"
+roomCommonJvm = "2.6.1"
 identityAndroidLegacy = "202411.1"
 playServicesMaps = "19.2.0"
 legacySupportV4 = "1.0.0"
 foundationLayoutAndroid = "1.7.2"
-hilt = "2.52"
+hilt = "2.56.2"
+ksp = "2.0.21-1.0.27"
+hilt-navigation-compose = "1.2.0"
 room = "2.6.1"
 
 [libraries]
@@ -34,8 +36,15 @@ androidx-foundation-layout-android = { group = "androidx.compose.foundation", na
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" } # 런타임
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }         # Coroutine 연동
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" } # KSP 처리기
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = {group="androidx.hilt", name="hilt-navigation-compose", version.ref = "hilt-navigation-compose"}
+
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
