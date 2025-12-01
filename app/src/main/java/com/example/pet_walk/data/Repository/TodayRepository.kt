@@ -5,8 +5,9 @@ import com.withwalk.app.api.TodayApi
 import com.withwalk.app.api.model.TodayRequest
 import com.withwalk.app.api.model.TodayResponse
 import retrofit2.Response
+import javax.inject.Inject
 
-class TodayRepository(private val api: TodayApi = NetworkModule.getRetrofit().create(TodayApi::class.java)) {
+class TodayRepository @Inject constructor(private val api: TodayApi) {
     /* 오늘의 정보 보내기 */
     suspend fun postToday(token: String, todayRequest: TodayRequest): Response<Unit> {
         return api.postToday(token, todayRequest)

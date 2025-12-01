@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,10 +63,6 @@ import com.withwalk.app.data.Repository.TodayRepository
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.ui.component.darkRoundBtn
 import com.withwalk.app.ui.screen.login.AuthViewModel
-import com.withwalk.app.ui.screen.login.AuthViewModelFactory
-import com.withwalk.app.ui.screen.today.TodayViewModel
-import com.withwalk.app.ui.screen.today.TodayViewModelFactory
-import com.withwalk.app.ui.screen.today.todayCheck
 import com.withwalk.app.ui.screen.walk.WalkActivity
 import com.withwalk.app.ui.theme.PetWalkTheme
 import com.withwalk.app.ui.theme.grey
@@ -89,15 +86,11 @@ fun HomeScreenPreview() {
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     NavBack()
     val context = LocalContext.current
     val tokenManager = TokenManager(context)
     val token = tokenManager.getToken()!!
-
-    val repository = AuthRepository()
-    val factory = AuthViewModelFactory(repository)
-    val viewModel: AuthViewModel = viewModel(factory=factory)
 
     LaunchedEffect(Unit) {
         viewModel.getHomePage(token)

@@ -56,6 +56,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -93,16 +94,17 @@ fun preRegistScreen(){
 
 
 @Composable
-fun RegistScreen(navController: NavController){
+fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
     val userEmail = savedStateHandle?.get<String>("userEmail") ?: ""
     val userPassword = savedStateHandle?.get<String>("userPassword") ?: ""
 
     Log.d("카카오", "넘겨받은 이메일 확인: $userEmail")
 
-    val repository = AuthRepository()
-    val factory = AuthViewModelFactory(repository)
-    val viewModel: AuthViewModel = viewModel(factory = factory)
+    //val repository = AuthRepository()
+    //val factory = AuthViewModelFactory(repository)
+    //val viewModel: AuthViewModel = viewModel(factory = factory)
+    //val viewModel: AuthViewModel = hiltViewModel()
 
     val message by viewModel.message.collectAsState()
 

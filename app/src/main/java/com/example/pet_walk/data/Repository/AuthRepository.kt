@@ -14,9 +14,10 @@ import com.withwalk.app.api.model.UpdateUserResponse
 import com.withwalk.app.api.model.UserInfoResponse
 import com.withwalk.app.api.model.VerifyCodeResponse
 import retrofit2.Response
+import javax.inject.Inject
 
 
-class AuthRepository (private val api: AuthApi = NetworkModule.getRetrofit().create(AuthApi::class.java)) {
+class AuthRepository @Inject constructor (private val api: AuthApi) {
     /* 회원가입 */
     suspend fun postAuth(authRequest: AuthRequest): Response<AuthResponse>{
         val response = api.postSignup(authRequest)

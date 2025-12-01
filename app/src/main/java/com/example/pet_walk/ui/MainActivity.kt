@@ -71,7 +71,9 @@ import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import com.example.pet_walk.ui.screen.attendance.AttendanceScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Pet_walk)

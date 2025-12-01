@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -53,7 +54,6 @@ import com.withwalk.app.data.Repository.SettingRepository
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.ui.screen.homepage.NavBack
 import com.withwalk.app.ui.screen.login.AuthViewModel
-import com.withwalk.app.ui.screen.login.AuthViewModelFactory
 import com.withwalk.app.ui.theme.PetWalkTheme
 import com.withwalk.app.ui.theme.grey
 
@@ -67,12 +67,8 @@ fun prevSetting(){
 }
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SettingScreen(navController: NavController){
+fun SettingScreen(navController: NavController, authViewModel: AuthViewModel = hiltViewModel(), viewModel: SettingViewModel = hiltViewModel()){
     NavBack()
-
-    val repository = SettingRepository()
-    val factory = SettingViewModelFactory(repository)
-    val viewModel: SettingViewModel = viewModel(factory = factory)
 
     val tokenManager = TokenManager(LocalContext.current)
     val token = tokenManager.getToken()!!
@@ -84,10 +80,6 @@ fun SettingScreen(navController: NavController){
     val settingInfo by viewModel.dDay.collectAsState()
     val profileViewModel: ProfileImageViewModel = viewModel()
     val profile = profileViewModel.dogKind[settingInfo.img] ?: R.drawable.transparent
-
-    val authRepository = AuthRepository()
-    val authFactory = AuthViewModelFactory(authRepository)
-    val authViewModel: AuthViewModel = viewModel(factory = authFactory)
 
     Box(modifier = Modifier.fillMaxSize()) {
             Column(

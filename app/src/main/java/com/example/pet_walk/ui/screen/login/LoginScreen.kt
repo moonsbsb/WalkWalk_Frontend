@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.withwalk.app.ui.theme.error_
@@ -69,10 +70,7 @@ private lateinit var viewModel: AuthViewModel
 private lateinit var kakaoEmail: String
 
 @Composable
-fun LoginScreen(navController: NavController){
-    val repository = AuthRepository()
-    val factory = AuthViewModelFactory(repository)
-    viewModel = viewModel(factory = factory)
+fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     val context = LocalContext.current
 
     ConstraintLayout(

@@ -6,12 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.withwalk.app.api.model.TodayInfo
 import com.withwalk.app.api.model.TodayRequest
 import com.withwalk.app.data.Repository.TodayRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class TodayViewModel(val repository: TodayRepository): ViewModel() {
+@HiltViewModel
+class TodayViewModel @Inject constructor (val repository: TodayRepository): ViewModel() {
 
     /* 오늘의 정보 전송 */
     fun postToday(token: String, todayRequest: TodayRequest){

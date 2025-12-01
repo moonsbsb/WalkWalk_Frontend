@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.withwalk.app.api.model.SettingInfo
 import com.withwalk.app.data.Repository.SettingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingViewModel(private val repository: SettingRepository) : ViewModel() {
+@HiltViewModel
+class SettingViewModel @Inject constructor(private val repository: SettingRepository) : ViewModel() {
     private val _dDay = MutableStateFlow<SettingInfo>(SettingInfo("", 1, "dog1"))
     var dDay: StateFlow<SettingInfo> = _dDay
     /* 탄생 디데이 조회 */

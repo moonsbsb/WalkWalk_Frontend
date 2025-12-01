@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -120,11 +121,8 @@ fun FindPasswordScreen(navController: NavController){
 /* 인증코드 전송 안내 및 확인 확면 */
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun CheckNumberScreen(navController: NavController){
+fun CheckNumberScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     var verificationCode by remember { mutableStateOf("") }
-    val repository = AuthRepository()
-    val factory = AuthViewModelFactory(repository)
-    val viewModel: AuthViewModel = viewModel(factory = factory)
 
     val context = LocalContext.current
     val tokenManager = TokenManager(context)

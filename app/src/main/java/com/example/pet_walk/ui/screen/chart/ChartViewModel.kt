@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.withwalk.app.api.model.ChartResult
 import com.withwalk.app.api.model.RecordRequest
 import com.withwalk.app.data.Repository.ChartRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

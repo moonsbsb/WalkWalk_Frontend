@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -56,7 +57,6 @@ import com.withwalk.app.api.model.UpdateUserRequest
 import com.withwalk.app.data.Repository.AuthRepository
 import com.withwalk.app.ui.component.CustomUserTextField
 import com.withwalk.app.ui.screen.login.AuthViewModel
-import com.withwalk.app.ui.screen.login.AuthViewModelFactory
 import com.withwalk.app.ui.screen.login.DatePickerModal
 import com.withwalk.app.ui.screen.login.SelectImage
 import com.withwalk.app.ui.theme.PetWalkTheme
@@ -73,11 +73,7 @@ private fun prevAccountUpdateScreen(){
     }
 }
 @Composable
-fun AccountUpdateScreen(navController: NavController){
-    val repository = AuthRepository()
-    val factory = AuthViewModelFactory(repository)
-    val viewModel: AuthViewModel = viewModel(factory = factory)
-
+fun AccountUpdateScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     val tokenManager = TokenManager(LocalContext.current)
     val token = tokenManager.getToken()!!
 

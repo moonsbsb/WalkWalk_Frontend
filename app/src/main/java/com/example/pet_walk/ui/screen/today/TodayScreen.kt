@@ -52,6 +52,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -67,12 +68,8 @@ import com.withwalk.app.ui.screen.homepage.NavBack
 
 @Preview
 @Composable
-fun TodayScreen(){
+fun TodayScreen(viewModel: TodayViewModel = hiltViewModel()){
     NavBack()
-
-    val repository = TodayRepository()
-    val factory = TodayViewModelFactory(repository)
-    val viewModel : TodayViewModel = viewModel(factory = factory)
 
     val tokenMagager = TokenManager(LocalContext.current)
     val token = tokenMagager.getToken()!!

@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -63,10 +64,7 @@ private fun prevDeleteScreen(){
 }
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun DeleteScreen(navController: NavController){
-    val repository = AuthRepository()
-    val factory = AuthViewModelFactory(repository)
-    val viewModel: AuthViewModel = viewModel(factory = factory)
+fun DeleteScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     val tokenManager = TokenManager(LocalContext.current)
     val token = tokenManager.getToken()!!
 

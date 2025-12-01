@@ -14,10 +14,14 @@ import com.withwalk.app.api.model.LoginRequest
 import com.withwalk.app.api.model.UnsubscribeResponse
 import com.withwalk.app.api.model.UpdateUserRequest
 import com.withwalk.app.data.Repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-class AuthViewModel(private val repository: AuthRepository): ViewModel() {
+import javax.inject.Inject
+
+@HiltViewModel
+class AuthViewModel @Inject constructor(private val repository: AuthRepository): ViewModel() {
 
     /* 회원가입 */
     val _message = MutableStateFlow<String>("")
