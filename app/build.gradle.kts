@@ -4,6 +4,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android") version "2.0.21"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
     //id("com.google.devtools.ksp") version "2.0.21-1.0.27"
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
@@ -113,6 +114,12 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    // DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.2.0")
+    // Gson (객체 직렬화/역직렬화용)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     // 기타 라이브러리
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
