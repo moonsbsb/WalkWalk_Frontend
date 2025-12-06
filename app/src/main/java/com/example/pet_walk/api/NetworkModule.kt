@@ -1,5 +1,6 @@
 package com.withwalk.app.api
 
+import com.example.pet_walk.api.AttendenceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,4 +45,10 @@ object NetworkModule {
         return retrofit.create(TodayApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    // 출석체크
+    fun provideAttendenceApi(retrofit: Retrofit): AttendenceApi{
+        return retrofit.create(AttendenceApi::class.java)
+    }
 }
