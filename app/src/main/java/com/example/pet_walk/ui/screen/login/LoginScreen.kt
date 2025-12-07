@@ -66,7 +66,7 @@ fun prev(){
     }
 }
 private val TAG = "카카오 로그인"
-private lateinit var viewModel: AuthViewModel
+//private lateinit var viewModel: AuthViewModel
 private lateinit var kakaoEmail: String
 
 @Composable
@@ -238,7 +238,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
             onClick = {
                 /* 카카로오 로그인 */
                 loginTriggered = true
-                LoginWithKakao(context, navController)
+                LoginWithKakao(context, navController, viewModel)
             }
         ) {
             Image(
@@ -249,13 +249,13 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
     }
 }
 // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
-private fun LoginWithKakao(context: Context, navController: NavController){
+private fun LoginWithKakao(context: Context, navController: NavController, viewModel: AuthViewModel){
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             Log.e(TAG, "카카오계정으로 로그인 실패", error)
         } else if (token != null) {
             Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
-            loginWithNewScopes(token.accessToken, navController)
+            loginWithNewScopes(token.accessToken, navController, viewModel)
         }
     }
 
@@ -268,7 +268,7 @@ private fun LoginWithKakao(context: Context, navController: NavController){
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             } else if (token != null) {
                 Log.i(TAG, "카카오톡으로 로그인 성공 ${token.accessToken}")
-                loginWithNewScopes(token.accessToken, navController)
+                loginWithNewScopes(token.accessToken, navController, viewModel)
             }
         }
     } else {
@@ -276,7 +276,7 @@ private fun LoginWithKakao(context: Context, navController: NavController){
     }
 }
 // 사용자 정보 요청 (사용 가능한 모든 동의항목을 대상으로 추가 동의 필요 여부 확인 및 추가 동의를 요청하는 예제입니다.)
-private fun loginWithNewScopes(token: String, navController: NavController){
+private fun loginWithNewScopes(token: String, navController: NavController, viewModel: AuthViewModel){
     UserApiClient.instance.me { user, error ->
         if (error != null) {
             Log.e(TAG, "사용자 정보 요청 실패", error)
