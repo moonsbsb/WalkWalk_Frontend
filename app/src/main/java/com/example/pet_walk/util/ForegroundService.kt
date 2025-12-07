@@ -77,6 +77,7 @@ class ForegroundService : Service() {
     private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
     private val sensor: Sensor? by lazy { sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) }
 
+
     /* 걸음 수 측정 */
     private val stepListener: SensorEventListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent){
@@ -94,13 +95,18 @@ class ForegroundService : Service() {
         if(sensor == null) Toast.makeText(this, "Step Sensor가 없습니다.", Toast.LENGTH_SHORT).show()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L).build()
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
+            .setWaitForAccurateLocation(false)
+            .build()
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 for (loc in result.locations) {
                     val latlng = LatLng.from(loc.latitude, loc.longitude)
+
                     pathRoute.add(latlng)
                     timeToDistance.add(loc.time)
+
+                    //startTimer()
 
                     _distanceFlow.value = calculateDistance(pathRoute, timeToDistance) //+ _pauseDistance.value
                     _pathFlow.value = pathRoute.toList()
@@ -112,7 +118,7 @@ class ForegroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(1, createNotification())
         startLocationUpdates()
-        startTimer()
+
         if (sensor == null) {
             Log.d("센서확인", "걸음 센서가 없습니다")
         } else {
@@ -148,7 +154,7 @@ class ForegroundService : Service() {
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
-    private fun startTimer() {
+    fun startTimer() {
         if (isTracking) return
         isTracking = true
 
@@ -236,7 +242,7 @@ class ForegroundService : Service() {
     @SuppressLint("MissingPermission")
     fun restartTracking(){
         startLocationUpdates()  // 위치 업데이트 요청
-        startTimer()
+        //startTimer()
         if (sensor != null) {
             sensorManager.registerListener(stepListener, sensor, SensorManager.SENSOR_DELAY_FASTEST)
         }
