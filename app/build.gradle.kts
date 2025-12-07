@@ -121,6 +121,9 @@ dependencies {
     // Gson (객체 직렬화/역직렬화용)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
+    // lottie 애니메이션
+    implementation("com.airbnb.android:lottie:5.0.2")
+
     // 기타 라이브러리
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.kakao.maps.open:android:2.12.8")

@@ -53,7 +53,7 @@ class WalkActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityWalkBinding.inflate(layoutInflater) }
     private lateinit var mapView: MapView
-    private lateinit var kakaoMap: KakaoMap
+    private lateinit var kakaoMap   : KakaoMap
 
     private var centerLabel: Label? = null
     private lateinit var styleSet: RouteLineStylesSet
@@ -68,6 +68,8 @@ class WalkActivity : AppCompatActivity() {
     private var isBind = false
 
     private var isMapInitialized = false
+
+    private var visibleAnimation = false
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -128,6 +130,12 @@ class WalkActivity : AppCompatActivity() {
         binding.play.setOnClickListener {
             binding.play.visibility = View.GONE
             binding.stop.visibility = View.VISIBLE
+
+            if(!visibleAnimation) {
+                binding.walkLottie.visibility = View.VISIBLE
+                binding.walkLottie.playAnimation()
+            }
+
 
             startForegroundService(Intent(this, ForegroundService::class.java))
             isBind = true
@@ -197,8 +205,8 @@ class WalkActivity : AppCompatActivity() {
             override fun onMapReady(map: KakaoMap) {
                 kakaoMap = map
 
-                val initPosition = LatLng.from(0.0, -160.0)
-                val style = LabelStyle.from(R.drawable.label_sample).setAnchorPoint(0.5f, 0.5f)
+                val initPosition = LatLng.from(36.0, 127.5)
+                val style = LabelStyle.from(R.drawable.transparent).setAnchorPoint(0.5f, 0.5f)
                 val styles = kakaoMap.labelManager?.addLabelStyles(LabelStyles.from(style))
                 val options = LabelOptions.from(initPosition).setStyles(styles)
                 centerLabel = kakaoMap.labelManager?.getLayer()?.addLabel(options)
@@ -209,17 +217,22 @@ class WalkActivity : AppCompatActivity() {
                 )
             }
 
-            override fun getPosition(): LatLng = centerLabel?.position ?: LatLng.from(0.0, -160.0)
-            override fun getZoomLevel(): Int = 16
+            override fun getPosition(): LatLng = centerLabel?.position ?: LatLng.from(36.0, 127.5)
+            override fun getZoomLevel(): Int = 6
         })
     }
     private fun observeServiceFlows(){
         lifecycleScope.launch {
-            walkViewModel.path.collect{path ->
-                if(path.size >= 2){
+            walkViewModel.path.collect { path ->
+                if (path.size >= 2) {
                     updateRoute(path)
                     val lastPos = path.last()
-                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(lastPos))
+                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(lastPos, 16))
+
+                    binding.walkLottie.visibility = View.GONE
+                    binding.walkLottie.pauseAnimation()
+                    visibleAnimation = true
+                    service?.startTimer()
                 }
             }
         }
