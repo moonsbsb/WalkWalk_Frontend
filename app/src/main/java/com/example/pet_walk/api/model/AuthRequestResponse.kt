@@ -32,7 +32,8 @@ data class HomeResponse(
 data class HomeInfo(
     val name: String,
     val birth: String,
-    val img: String
+    val img: String,
+    val weight: Float
 )
 /* 정보 수정 */
 data class UpdateUserRequest(

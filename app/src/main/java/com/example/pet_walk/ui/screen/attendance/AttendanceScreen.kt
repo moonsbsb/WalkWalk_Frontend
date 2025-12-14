@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -43,14 +45,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pet_walk.data.HiddenMessage
 import com.withwalk.app.R
 import com.withwalk.app.api.TokenManager
 import com.withwalk.app.ui.theme.PetWalkTheme
+import com.withwalk.app.ui.theme.light_grey
 import com.withwalk.app.ui.theme.main
 import com.withwalk.app.ui.theme.sky_sunset
+import com.withwalk.app.ui.theme.sub_main
 import com.withwalk.app.ui.theme.white
 import java.time.LocalDate
 import kotlin.random.Random
@@ -129,7 +134,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
     var min by remember { mutableStateOf(0) }
     var count by remember { mutableStateOf(0) }
 
-    distance = attendence.value.distanceSum
+    distance = (attendence.value.distanceSum)
     min = attendence.value.minSum
     count = attendence.value.count
 
@@ -141,6 +146,14 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
         popupMessage(
             message = m[popupCount],
             status = {popupStatus = false}
+        )
+    }
+    var notOpenStatus by remember { mutableStateOf(false) }
+    val notOpenMessage = "\n\n" + "아직 잠겨있어요.\n" + "산책 도장을 찍어서 도착하면 열려요!\n"
+    if(notOpenStatus){
+        popupMessage(
+            message = notOpenMessage,
+            status = {notOpenStatus = false}
         )
     }
 
@@ -170,7 +183,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
         )
         Text(
             text = "${month}월 걸은 거리: ${distance}m",
-            fontFamily = FontFamily(Font(R.font.gmarketsans_light)),
+            fontFamily = FontFamily(Font(R.font.gmarketsans_medium)),
             fontSize = 15.sp,
             modifier = Modifier.constrainAs(distanceSum){
                 start.linkTo(parent.start, 15.dp)
@@ -179,7 +192,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
         )
         Text(
             text = "${month}월 걸은 시간: ${min}분",
-            fontFamily = FontFamily(Font(R.font.gmarketsans_light)),
+            fontFamily = FontFamily(Font(R.font.gmarketsans_medium)),
             fontSize = 15.sp,
             modifier = Modifier.constrainAs(hourSum){
                 start.linkTo(distanceSum.end)
@@ -191,6 +204,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
         /* ================== 1열 ==================================== */
         val startGuide = createGuidelineFromStart(0.05f)
         val endGuide = createGuidelineFromEnd(0.05f)
+        val comment = createRef()
         if(count >= 1){
             Image(
                 painter = painterResource(expressions[0]),
@@ -203,15 +217,26 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                     }
             )
         }else{
-            Box(
+            Image(
+                painter = painterResource(R.drawable.expression_not),
+                contentDescription = null,
                 modifier = Modifier
                     .size(boxSize)
-                    .background(color = boxColor, corner)
                     .constrainAs(b1) {
                         start.linkTo(startGuide)
                         top.linkTo(parent.top, 80.dp)
                     }
             )
+            Box(
+                modifier = Modifier
+                    .background(color = white, shape = RoundedCornerShape(topStart = 0.dp, topEnd = 8.dp, bottomStart = 8.dp, bottomEnd = 8.dp))
+                    .constrainAs(comment) {
+                        start.linkTo(startGuide)
+                        top.linkTo(b1.bottom, 5.dp)
+                    }.padding(10.dp)
+            ) {
+                Text(text = "산책을 해서 빈 칸을 채워주세요!", style = MaterialTheme.typography.labelMedium)
+            }
         }
         if(count >= 2) {
             Image(
@@ -348,6 +373,10 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                 modifier = Modifier.constrainAs(b7) {
                     top.linkTo(b6.bottom, horizonMargin)
                     end.linkTo(b5.end)
+                }.clickable {
+                    popupCount = 0
+                    popupStatus = true
+                    notOpenStatus = false
                 }
             )
         }else{
@@ -358,10 +387,9 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                     .constrainAs(b7) {
                         top.linkTo(b6.bottom, horizonMargin)
                         end.linkTo(b5.end)
-                    }
-                    .clickable {
-                        popupCount = 0
-                        popupStatus = true
+                    }.clickable {
+                        popupStatus = false
+                        notOpenStatus = true
                     }
             )
         }
@@ -522,10 +550,10 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                         start.linkTo(b9.start)
                         top.linkTo(b13.top)
                         bottom.linkTo(b13.bottom)
-                    }
-                    .clickable {
+                    }.clickable {
                         popupCount = 1
                         popupStatus = true
+                        notOpenStatus = false
                     }
             )
         }else{
@@ -537,8 +565,8 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                     top.linkTo(b13.top)
                     bottom.linkTo(b13.bottom)
                 }.clickable {
-                    popupCount = 1
-                    popupStatus = true
+                    popupStatus = false
+                    notOpenStatus = true
                 }
             )
         }
@@ -699,6 +727,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                     .clickable {
                         popupCount = 2
                         popupStatus = true
+                        notOpenStatus = false
                     }
             )
         }else{
@@ -709,10 +738,9 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                     top.linkTo(b20.bottom, -horizonMargin)
                     start.linkTo(b11.start)
                 }.clickable {
-                    popupCount = 2
-                    popupStatus = true
+                        popupStatus = false
+                        notOpenStatus = true
                 }
-
             )
         }
 
@@ -877,7 +905,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                 )
             }else{
                 Image(
-                    painter = painterResource(R.drawable.destination),
+                    painter = painterResource(R.drawable.transparent),
                     contentDescription = null,
                     modifier = Modifier.constrainAs(b31) {
                         end.linkTo(b25.end)
@@ -921,7 +949,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                 )
             }else{
                 Image(
-                    painter = painterResource(R.drawable.destination),
+                    painter = painterResource(R.drawable.transparent),
                     contentDescription = null,
                     modifier = Modifier.constrainAs(b31) {
                         end.linkTo(b24.end)
@@ -967,6 +995,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                         .clickable {
                             popupCount = 3
                             popupStatus = true
+                            notOpenStatus = false
                         }
                 )
             }else{
@@ -978,8 +1007,8 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                         top.linkTo(b28.top)
                         bottom.linkTo(b28.bottom)
                     }.clickable {
-                        popupCount = 3
-                        popupStatus = true
+                        popupStatus = false
+                        notOpenStatus = true
                     }
                 )
             }
@@ -994,7 +1023,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                 )
             }else{
                 Image(
-                    painter = painterResource(R.drawable.destination),
+                    painter = painterResource(R.drawable.transparent),
                     contentDescription = null,
                     modifier = Modifier.constrainAs(b31) {
                         end.linkTo(b23.end)
@@ -1039,6 +1068,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                         .clickable {
                             popupCount = 3
                             popupStatus = true
+                            notOpenStatus = false
                         }
                 )
             }else{
@@ -1050,8 +1080,8 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                         top.linkTo(b28.top)
                         bottom.linkTo(b28.bottom)
                     }.clickable {
-                        popupCount = 3
-                        popupStatus = true
+                        popupStatus = false
+                        notOpenStatus = true
                     }
                 )
             }
@@ -1088,7 +1118,7 @@ fun AttendanceScreen(viewModel: AttendenceViewModel = hiltViewModel()){
                 )
             }else{
                 Image(
-                    painter = painterResource(R.drawable.destination),
+                    painter = painterResource(R.drawable.transparent),
                     contentDescription = null,
                     modifier = Modifier.constrainAs(b31) {
                         end.linkTo(b22.end)

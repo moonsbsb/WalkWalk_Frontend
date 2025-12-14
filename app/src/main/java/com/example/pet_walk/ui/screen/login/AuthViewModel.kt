@@ -50,6 +50,8 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository):
     val errorMsg_ = MutableStateFlow<String>("")
     val errorMsg: MutableStateFlow<String> = errorMsg_
     fun postLogin(loginRequest: LoginRequest){
+        token_.value = ""
+        errorMsg_.value = ""
         viewModelScope.launch {
             try{
                 val response = repository.postLogin(loginRequest)
@@ -57,22 +59,26 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository):
                 if(response.isSuccessful && body != null){
                     token_.value = body.token
                     Log.d("로그인", "로그인 성공: ${body.message}")
-                }else {Log.d("로그인", "로그인 실패: ${response.code()} - ${response.message()}")}
+                }
+                else {
+                    errorMsg_.value = response.code().toString()
+                    Log.d("로그인", "로그인 실패: ${response.code()} - ${response.message()}")
+                }
                 Log.d("로그인", "로그인 메세지 확인: ${response.body()!!.message}")
-            }catch (e:Exception){Log.e("로그인", "에러: ${e}")}
+            }catch (e:Exception){Log.e("로그인", "에러: ${e.message}")}
         }
     }
 
     /* 홈페이지 정보 조회 */
-    val dog_ = MutableStateFlow(HomeInfo("", "", R.drawable.dog1.toString()))
+    val dog_ = MutableStateFlow(HomeInfo("", "", R.drawable.dog1.toString(), 1f))
     val dog: MutableStateFlow<HomeInfo> = dog_
     fun getHomePage(token: String){
         viewModelScope.launch {
             try {
                 val response = repository.getHome(token)
                 if(response.isSuccessful){
-                    dog_.value = HomeInfo(response.body()!!.result.name , response.body()!!.result.birth, response.body()!!.result.img)
-                    Log.d("홈페이지 정보 조회", "조회 성공: ${response.message()} / ${response.body()!!.result.img}")
+                    dog_.value = HomeInfo(response.body()!!.result.name , response.body()!!.result.birth, response.body()!!.result.img, response.body()!!.result.weight)
+                    Log.d("홈페이지 정보 조회", "조회 성공: ${response.message()} / ${response.body()!!.result.weight}")
                 }else {Log.d("홈페이지 정보 조회", "조회 실패: ${response.code()} - ${response.message()}")}
             }catch (e: Exception){ Log.e("홈페이지 정보 조회", "에러:  ${e.message}") }
         }
@@ -152,6 +158,9 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository):
     /* 카카로 로그인 */
     val _kakaoMessage = MutableStateFlow<String>("")
     val kakaoMessage: MutableStateFlow<String> = _kakaoMessage
+
+    val _kakaoEmail = MutableStateFlow<String>("")
+    val kakaoEmail: StateFlow<String> = _kakaoEmail
     fun kakaoLogin(token: String){
         viewModelScope.launch {
             try {
