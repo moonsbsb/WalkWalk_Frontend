@@ -5,17 +5,17 @@ data class ChartResponse(
     val result: ChartResult
 )
 data class ChartResult(
-    var meal: Int = 0,
-    var water: Int = 0,
-    var poo: Int = 0,
     val stepCount: Int? = 0,
+    val slowStepTime: Int? = 0,
+    val nomalStepTime: Int? = 0,
     val distance: Float? = 0f,
     val time: String? = "",
     val slowPercent: Int? = 0,
     val nomalPercent: Int? = 0,
     val kcal: Int? = 0,
-    val stepPercent: Int? = 0,
+    val stepPercent: Int? = 0
 )
+
 data class RecordRequest(
     val stepCount: Int,
     val distance: Float,

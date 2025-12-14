@@ -10,10 +10,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChartViewModel(private val repository: ChartRepository): ViewModel() {
+@HiltViewModel
+class ChartViewModel @Inject constructor (private val repository: ChartRepository): ViewModel() {
     /* 날짜 별 차트 정보 조회 */
-    val _dayChart = MutableStateFlow<ChartResult>(ChartResult(0,0,0,0,0f,"", 0,0,0) )
+    val _dayChart = MutableStateFlow<ChartResult>(ChartResult(0,0,0,0f,"", 0,0,0,0) )
     var dayChart: StateFlow<ChartResult> = _dayChart
     fun getChartByDate(token: String, date: String){
         Log.d("날짜 별 차트 정보 조회", "요청 날짜: ${date}")
@@ -23,7 +25,7 @@ class ChartViewModel(private val repository: ChartRepository): ViewModel() {
                 val result = response.body()?.result
                 if(response.isSuccessful && result!=null){
                     _dayChart.value = result
-                    Log.d("날짜 별 차트 정보 조회", "요청 성공: ${response.body()?.message} 물: ${result.water} 칼로리: ${result.kcal} 스텝퍼센트: ${result.stepPercent} 걷기퍼센트: ${result.nomalPercent}")
+                    Log.d("날짜 별 차트 정보 조회", "요청 성공: ${response.body()?.message} 느리게 걸은 시간: ${result.slowStepTime}")
                 }else{ Log.d("날짜 별 차트 정보 조회", "요청 실패: ${response.code()} - ${response.message()}") }
             }catch (e: Exception) { Log.e("날짜 별 차트 정보 조회", "에러: ${e.message}")}
         }
