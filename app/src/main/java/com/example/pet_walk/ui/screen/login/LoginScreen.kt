@@ -1,5 +1,6 @@
 package com.withwalk.app.ui.screen.login
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -66,9 +67,8 @@ fun prev(){
     }
 }
 private val TAG = "카카오 로그인"
-//private lateinit var viewModel: AuthViewModel
-private lateinit var kakaoEmail: String
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
     val context = LocalContext.current
@@ -81,6 +81,8 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
     ) {
         val (logo, emailBox, storeEmail, emailCheck, passwordBox, passwordTxt, loginBox, loginTxt, findPassword, singupTxt, loginWithKakao, errorMsg) = createRefs()
         val horizonGuideLine1 = createGuidelineFromTop(0.15f)
+        var msg = viewModel.errorMsg.collectAsState().value
+
         Text(
             text = stringResource(id = R.string.app_name),
             style = MaterialTheme.typography.displayMedium,
@@ -129,11 +131,13 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                 checked= isChecked
                 sharedPref.edit().putBoolean("store_check", isChecked).apply()
                               },
-            modifier = Modifier.size(20.dp).constrainAs(emailCheck){
-                start.linkTo(emailBox.start)
-                top.linkTo(storeEmail.top)
-                bottom.linkTo(storeEmail.bottom)
-            },
+            modifier = Modifier
+                .size(20.dp)
+                .constrainAs(emailCheck) {
+                    start.linkTo(emailBox.start)
+                    top.linkTo(storeEmail.top)
+                    bottom.linkTo(storeEmail.bottom)
+                },
             colors = CheckboxDefaults.colors(
                 checkmarkColor = main,
                 uncheckedColor = middle_grey,
@@ -153,12 +157,24 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                 placeholder = "비밀번호를 입력해주세요"
             )
         }
+        if(msg == "401") {
+            Text(
+                modifier = Modifier.constrainAs(errorMsg){
+                    top.linkTo(passwordBox.bottom, 3.dp)
+                    start.linkTo(passwordBox.start)
+                },
+                text = "비밀번호나 아이디가 일치하지않습니다.", style = MaterialTheme.typography.labelSmall, color = error_)
+        }
+
+
         val token by viewModel.token.collectAsState()
         Button(
             modifier = Modifier
                 .constrainAs(loginBox) {
                     top.linkTo(passwordBox.bottom, 40.dp)
-                }.fillMaxWidth().height(50.dp),
+                }
+                .fillMaxWidth()
+                .height(50.dp),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.buttonColors(containerColor = main),
             onClick = {
@@ -166,27 +182,17 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                 viewModel.postLogin(requst)
             }
         ) {
-            if(token.isEmpty()){
-            }else{
-                val tokenManager = TokenManager(context)
-                tokenManager.saveToken("Bearer $token")
-                navController.navigate(Screen.Home.route)
+            LaunchedEffect(token) {
+                if(token.isNotEmpty()) {
+                    val tokenManager = TokenManager(context)
+                    tokenManager.saveToken("Bearer $token")
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             }
             Text(text = stringResource(R.string.login), style = MaterialTheme.typography.bodyMedium)
         }
-
-        /*IconButton (
-            modifier = Modifier
-                .constrainAs(findPassword) {
-                    top.linkTo(loginBox.bottom, 10.dp)
-                }
-                .fillMaxWidth(0.2f),
-            onClick = {}
-        ){
-            Text(text = "비밀번호찾기",
-                style = MaterialTheme.typography.labelSmall)
-        }*/
-
         TextButton(
             modifier = Modifier.constrainAs(singupTxt){
                 top.linkTo(loginBox.bottom, 10.dp)
@@ -205,18 +211,17 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
         val kakaoToken by viewModel.token.collectAsState()
 
         var loginTriggered by remember { mutableStateOf(false) }
-        Log.d("카카오", "loginTriggered: $loginTriggered")
+        val kakaoEmail by viewModel.kakaoEmail.collectAsState()
+
         if (loginTriggered) {
             LaunchedEffect(kakaoMsg) {
                 when (kakaoMsg) {
                     "Success" -> {
-                        Log.d("카카오", "메세지: Success")
                         val tokenManager = TokenManager(context)
                         tokenManager.saveToken("Bearer $token")
                         navController.navigate(Screen.Home.route)
                     }
                     "Empty" -> {
-                        Log.d("카카오", "메세지: Empty")
                         navController.currentBackStackEntry?.savedStateHandle?.set("userEmail", kakaoEmail)
                         navController.navigate(Screen.Regist.route)
                     }
@@ -288,17 +293,8 @@ private fun loginWithNewScopes(token: String, navController: NavController, view
             val profile = user.kakaoAccount?.profile?.profileImageUrl
 
             viewModel.kakaoLogin("Bearer $token")
-            kakaoEmail = email
-            Log.d("카카오", "넘겨주는 이메일: $kakaoEmail")
+            viewModel._kakaoEmail.value = email
         }
-
-    }
-}
-@Composable
-private fun errorMsg(messge: String, error: Boolean){
-    if(error){
-        Text(text = messge, style = MaterialTheme.typography.labelSmall, color = error_)
-    }else{
 
     }
 }

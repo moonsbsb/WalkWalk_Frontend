@@ -12,17 +12,24 @@ import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -42,6 +49,7 @@ import com.withwalk.app.databinding.ActivityWalkBinding
 import com.withwalk.app.ui.screen.homepage.HomeScreen
 import com.withwalk.app.ui.theme.PetWalkTheme
 import com.withwalk.app.util.ForegroundService
+import dagger.hilt.android.AndroidEntryPoint
 import java.nio.IntBuffer
 import javax.microedition.khronos.egl.EGL10
 import javax.microedition.khronos.egl.EGLContext
@@ -49,6 +57,7 @@ import javax.microedition.khronos.opengles.GL10
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class WalkActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityWalkBinding.inflate(layoutInflater) }
@@ -94,10 +103,14 @@ class WalkActivity : AppCompatActivity() {
             service = null
         }
     }
+    private val statusBarColor = Color.BLACK // Compose의 black 색상에 대응되는 Android Color
+    private val useDarkIcons = false // Compose의 darkIcons = false에 대응
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        setStatusBarAppearance(statusBarColor, useDarkIcons)
 
         mapView = binding.kakaoMapView
 
@@ -160,15 +173,14 @@ class WalkActivity : AppCompatActivity() {
             service?.stopTarcking()
             stopService(Intent(this, ForegroundService::class.java))
             // 캡처 후 결과 화면
-            mapView.postDelayed({
-                captureMap { bitmap ->
-                    if (bitmap != null) setContent { PetWalkTheme {  WalkResultScreen(bitmap,walkViewModel) } }
-                    else {
-                        Toast.makeText(this, "지도 캡처 실패", Toast.LENGTH_SHORT).show()
-                        setContent { PetWalkTheme {  WalkResultScreen(Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888),walkViewModel) } }
-                    }
+            setContent {
+                PetWalkTheme {
+                    val scroll = rememberScrollState()
+                    Column(
+                        modifier = Modifier.fillMaxSize().verticalScroll(scroll)
+                    ) { WalkResultScreen(walkViewModel) }
                 }
-            }, 600)
+            }
         }
     }
 
@@ -259,50 +271,30 @@ class WalkActivity : AppCompatActivity() {
         if (!::routeLine.isInitialized) routeLine = layer.addRouteLine(options)
         else routeLine.changeSegments(listOf(segment))
     }
-    /* MapView 캡처 */
-    private fun captureMap(onCaptured: (Bitmap?) -> Unit) {
-        val surfaceView = mapView.getChildAt(0) as? GLSurfaceView ?: run {
-            onCaptured(null)
-            return
-        }
-        surfaceView.queueEvent {
-            try {
-                val width = surfaceView.width
-                val height = surfaceView.height
-                val bitmapBuffer = IntArray(width * height)
-                val bitmapSource = IntArray(width * height)
-                val intBuffer = IntBuffer.wrap(bitmapBuffer)
-                intBuffer.position(0)
-
-                val gl = (EGLContext.getEGL() as EGL10).eglGetCurrentContext().gl as GL10
-                gl.glReadPixels(0, 0, width, height, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, intBuffer)
-
-                for (i in 0 until height) {
-                    for (j in 0 until width) {
-                        val pixel = bitmapBuffer[i * width + j]
-                        val blue = (pixel shr 16) and 0xff
-                        val red = (pixel shl 16) and 0x00ff0000
-                        val corrected = (pixel and -0xff0100) or red or blue
-                        bitmapSource[(height - i - 1) * width + j] = corrected
-                    }
-                }
-                val bitmap = Bitmap.createBitmap(bitmapSource, width, height, Bitmap.Config.ARGB_8888)
-                val targetWidth = width
-                val targetHeight = (width * 3f / 4f).toInt()
-
-                val offsetY = (height - targetHeight) / 2
-
-                val cropped = Bitmap.createBitmap(bitmap, 0, offsetY, targetWidth, targetHeight)
-                runOnUiThread { onCaptured(cropped) }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                runOnUiThread { onCaptured(null) }
-            }
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+    private fun setStatusBarAppearance(color: Int, darkIcons: Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = color
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                val decorView = window.decorView
+                var flags = decorView.systemUiVisibility
+
+                if (darkIcons) {
+                    flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                } else {
+                    flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                }
+                decorView.systemUiVisibility = flags
+            }
+        }
     }
 }
 

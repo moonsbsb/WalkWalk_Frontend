@@ -86,6 +86,7 @@ fun AccountUpdateScreen(navController: NavController, viewModel: AuthViewModel =
     var birth by remember { mutableStateOf(dog.birth) }
     var img by remember { mutableStateOf(dog.img) }
 
+
     LaunchedEffect(dog) {
         name = dog.name
         weight = "${dog.weight}"
@@ -95,7 +96,7 @@ fun AccountUpdateScreen(navController: NavController, viewModel: AuthViewModel =
     }
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(color = sub_main)
             .padding(15.dp)
     ) {

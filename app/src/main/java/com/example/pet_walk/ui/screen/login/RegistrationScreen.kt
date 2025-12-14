@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -77,24 +79,27 @@ import com.withwalk.app.ui.component.CustomLabelText
 import com.withwalk.app.ui.component.CustomUserDogField
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.ui.theme.PetWalkTheme
+import com.withwalk.app.ui.theme.third_main
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-@Preview
+/*@Preview
 @Composable
 fun preRegistScreen(){
     val navController = rememberNavController()
     PetWalkTheme {
         RegistScreen(navController)
     }
-}
+}*/
 
 
 @Composable
-fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
+fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel(), onBack: ()->Unit){
     val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
     val userEmail = savedStateHandle?.get<String>("userEmail") ?: ""
     val userPassword = savedStateHandle?.get<String>("userPassword") ?: ""
@@ -107,6 +112,10 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
     //val viewModel: AuthViewModel = hiltViewModel()
 
     val message by viewModel.message.collectAsState()
+
+    BackHandler {
+        onBack()
+    }
 
     Column(
         modifier = Modifier
@@ -312,6 +321,7 @@ fun SelectImage(onSelect: (String) -> Unit, modifier: Modifier){
         modifier = modifier,
     ) {
         items(kind.toList()){(key, image) ->
+            val isSelected = state[key] ?: false
             Column(
                 modifier = Modifier.padding(start = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -323,6 +333,9 @@ fun SelectImage(onSelect: (String) -> Unit, modifier: Modifier){
                         onSelect(key)
                     },
                     modifier = Modifier
+                        .background(
+                            color = if(isSelected) third_main else Color.Transparent
+                        )
                         .size(220.dp)
                         .clip(RoundedCornerShape(8.dp)),
                 ) {
@@ -395,7 +408,17 @@ fun DatePickerModal(
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ){
-    val datePickerState = rememberDatePickerState()
+    val today = LocalDate.now()
+    val todayMillis = today.atStartOfDay(ZoneId.systemDefault())
+        .toInstant().toEpochMilli()
+
+    val datePickerState = rememberDatePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= todayMillis
+            }
+        }
+    )
 
     DatePickerDialog(
         onDismissRequest = onDismiss,

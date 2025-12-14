@@ -1,6 +1,10 @@
 package com.withwalk.app.ui.screen.walk
 
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.withwalk.app.R
+import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.util.ForegroundService
 
 class WalkViewModel(private val service: ForegroundService): ViewModel() {
@@ -10,6 +14,13 @@ class WalkViewModel(private val service: ForegroundService): ViewModel() {
     val step = service.stepFlow
     val slowStep = service.slowStep
     val nomalStep = service.nomalStep
+
+    private var walkService: ForegroundService? = null
+
+    fun getService(service: ForegroundService){
+        this.walkService = service
+    }
+
 
     fun timeFormat(time: Long): String{
         val formatTime = time / 1000
@@ -47,8 +58,8 @@ class WalkViewModel(private val service: ForegroundService): ViewModel() {
         val ratio = if (nomalM > 0) (formatTime.toDouble() / nomalM * 100) else 0.0
 
         return when {
-            ratio >= 63 -> "# 멈추지않는 강아지"
-            ratio <= 45 -> "# 여유로운 강아지"
+            ratio >= 60 -> "# 멈추지않는 강아지"
+            ratio <= 55 -> "# 여유로운 강아지"
             else -> "# 반반 강아지"
         }
     }
