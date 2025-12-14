@@ -1,18 +1,16 @@
 package com.withwalk.app.ui.screen.login
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
 import com.withwalk.app.R
-import com.withwalk.app.api.model.AuthRequest
-import com.withwalk.app.api.model.CodeRequest
-import com.withwalk.app.api.model.DogRequest
-import com.withwalk.app.api.model.HomeInfo
-import com.withwalk.app.api.model.LoginRequest
-import com.withwalk.app.api.model.UnsubscribeResponse
-import com.withwalk.app.api.model.UpdateUserRequest
+import com.example.pet_walk.data.remote.model.AuthRequest
+import com.example.pet_walk.data.remote.model.CodeRequest
+import com.example.pet_walk.data.remote.model.DogRequest
+import com.example.pet_walk.data.remote.model.HomeInfo
+import com.example.pet_walk.data.remote.model.LoginRequest
+import com.example.pet_walk.data.remote.model.UnsubscribeResponse
+import com.example.pet_walk.data.remote.model.UpdateUserRequest
 import com.withwalk.app.data.Repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,14 +1,9 @@
 package com.withwalk.app.ui.screen.homepage
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.airbnb.lottie.LottieComposition
-import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.withwalk.app.R
-import com.withwalk.app.api.model.Item
 import com.withwalk.app.data.Repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

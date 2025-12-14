@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,11 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.withwalk.app.ui.theme.dark_grey
@@ -44,13 +40,11 @@ import com.withwalk.app.ui.theme.grey
 import com.withwalk.app.ui.theme.light_grey
 import com.withwalk.app.ui.theme.main
 import com.withwalk.app.ui.theme.middle_grey
-import com.withwalk.app.ui.theme.point_red
 import com.withwalk.app.ui.theme.white
 import com.withwalk.app.R
-import com.withwalk.app.Screen
-import com.withwalk.app.api.TokenManager
-import com.withwalk.app.api.model.CodeRequest
-import com.withwalk.app.data.Repository.AuthRepository
+import com.example.pet_walk.ui.Screen
+import com.example.pet_walk.core.TokenManager
+import com.example.pet_walk.data.remote.model.CodeRequest
 import com.withwalk.app.ui.theme.PetWalkTheme
 
 @Preview

@@ -1,9 +1,8 @@
 package com.withwalk.app.data.Repository
 
-import com.withwalk.app.api.NetworkModule
-import com.withwalk.app.api.TodayApi
-import com.withwalk.app.api.model.TodayRequest
-import com.withwalk.app.api.model.TodayResponse
+import com.example.pet_walk.data.remote.api.TodayApi
+import com.example.pet_walk.data.remote.model.TodayRequest
+import com.example.pet_walk.data.remote.model.TodayResponse
 import retrofit2.Response
 import javax.inject.Inject
 

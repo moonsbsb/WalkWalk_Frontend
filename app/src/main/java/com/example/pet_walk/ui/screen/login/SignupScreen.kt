@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +34,7 @@ import com.withwalk.app.ui.theme.main
 import com.withwalk.app.ui.theme.middle_grey
 import com.withwalk.app.ui.theme.white
 import com.withwalk.app.R
-import com.withwalk.app.Screen
+import com.example.pet_walk.ui.Screen
 import com.withwalk.app.ui.component.CustomLabelText
 import com.withwalk.app.ui.component.CustomUserTextField
 import com.withwalk.app.ui.theme.PetWalkTheme

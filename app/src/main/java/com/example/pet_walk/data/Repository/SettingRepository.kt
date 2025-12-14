@@ -1,8 +1,7 @@
 package com.withwalk.app.data.Repository
 
-import com.withwalk.app.api.NetworkModule
-import com.withwalk.app.api.SettingApi
-import com.withwalk.app.api.model.SettingResponse
+import com.example.pet_walk.data.remote.api.SettingApi
+import com.example.pet_walk.data.remote.model.SettingResponse
 import retrofit2.Response
 import javax.inject.Inject
 

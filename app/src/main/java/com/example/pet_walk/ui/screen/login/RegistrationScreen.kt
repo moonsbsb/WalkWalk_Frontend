@@ -1,7 +1,6 @@
 package com.withwalk.app.ui.screen.login
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,14 +34,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -59,7 +53,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -71,10 +64,9 @@ import com.withwalk.app.ui.theme.point_red
 import com.withwalk.app.ui.theme.sub_main
 import com.withwalk.app.ui.theme.white
 import com.withwalk.app.R
-import com.withwalk.app.Screen
-import com.withwalk.app.api.model.AuthRequest
-import com.withwalk.app.api.model.DogRequest
-import com.withwalk.app.data.Repository.AuthRepository
+import com.example.pet_walk.ui.Screen
+import com.example.pet_walk.data.remote.model.AuthRequest
+import com.example.pet_walk.data.remote.model.DogRequest
 import com.withwalk.app.ui.component.CustomLabelText
 import com.withwalk.app.ui.component.CustomUserDogField
 import com.withwalk.app.ui.component.ProfileImageViewModel
@@ -83,7 +75,6 @@ import com.withwalk.app.ui.theme.third_main
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale

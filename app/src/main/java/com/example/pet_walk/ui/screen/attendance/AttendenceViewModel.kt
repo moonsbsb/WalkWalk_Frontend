@@ -1,18 +1,14 @@
 package com.example.pet_walk.ui.screen.attendance
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.example.pet_walk.data.Repository.AttendenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pet_walk.api.model.Attendence
-import com.example.pet_walk.data.HiddenMessage
-import com.example.pet_walk.data.MessageRepository
+import com.example.pet_walk.data.remote.model.Attendence
+import com.example.pet_walk.data.local.entity.HiddenMessage
+import com.example.pet_walk.data.Repository.MessageRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

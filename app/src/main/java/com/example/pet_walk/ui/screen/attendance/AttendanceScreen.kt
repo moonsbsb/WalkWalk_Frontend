@@ -1,6 +1,5 @@
 package com.example.pet_walk.ui.screen.attendance
 
-import android.content.Context
 import  androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -23,12 +21,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,20 +41,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.pet_walk.data.HiddenMessage
 import com.withwalk.app.R
-import com.withwalk.app.api.TokenManager
+import com.example.pet_walk.core.TokenManager
 import com.withwalk.app.ui.theme.PetWalkTheme
-import com.withwalk.app.ui.theme.light_grey
 import com.withwalk.app.ui.theme.main
 import com.withwalk.app.ui.theme.sky_sunset
-import com.withwalk.app.ui.theme.sub_main
 import com.withwalk.app.ui.theme.white
 import java.time.LocalDate
-import kotlin.random.Random
 
 
 @Preview

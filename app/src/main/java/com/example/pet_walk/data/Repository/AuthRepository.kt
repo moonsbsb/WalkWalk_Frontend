@@ -1,18 +1,17 @@
 package com.withwalk.app.data.Repository
 
-import com.withwalk.app.api.AuthApi
-import com.withwalk.app.api.NetworkModule
-import com.withwalk.app.api.model.AuthRequest
-import com.withwalk.app.api.model.AuthResponse
-import com.withwalk.app.api.model.CodeRequest
-import com.withwalk.app.api.model.HomeResponse
-import com.withwalk.app.api.model.LoginRequest
-import com.withwalk.app.api.model.LoginResponse
-import com.withwalk.app.api.model.UnsubscribeResponse
-import com.withwalk.app.api.model.UpdateUserRequest
-import com.withwalk.app.api.model.UpdateUserResponse
-import com.withwalk.app.api.model.UserInfoResponse
-import com.withwalk.app.api.model.VerifyCodeResponse
+import com.example.pet_walk.data.remote.api.AuthApi
+import com.example.pet_walk.data.remote.model.AuthRequest
+import com.example.pet_walk.data.remote.model.AuthResponse
+import com.example.pet_walk.data.remote.model.CodeRequest
+import com.example.pet_walk.data.remote.model.HomeResponse
+import com.example.pet_walk.data.remote.model.LoginRequest
+import com.example.pet_walk.data.remote.model.LoginResponse
+import com.example.pet_walk.data.remote.model.UnsubscribeResponse
+import com.example.pet_walk.data.remote.model.UpdateUserRequest
+import com.example.pet_walk.data.remote.model.UpdateUserResponse
+import com.example.pet_walk.data.remote.model.UserInfoResponse
+import com.example.pet_walk.data.remote.model.VerifyCodeResponse
 import retrofit2.Response
 import javax.inject.Inject
 

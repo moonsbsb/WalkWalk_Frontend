@@ -3,7 +3,6 @@ package com.withwalk.app.ui.screen.login
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -40,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.withwalk.app.ui.theme.error_
 import com.withwalk.app.ui.theme.middle_grey
@@ -49,13 +47,11 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.withwalk.app.R
-import com.withwalk.app.Screen
-import com.withwalk.app.api.TokenManager
-import com.withwalk.app.api.model.LoginRequest
-import com.withwalk.app.data.Repository.AuthRepository
+import com.example.pet_walk.ui.Screen
+import com.example.pet_walk.core.TokenManager
+import com.example.pet_walk.data.remote.model.LoginRequest
 import com.withwalk.app.ui.component.CustomUserTextField
 import com.withwalk.app.ui.theme.PetWalkTheme
-import com.withwalk.app.ui.theme.grey
 
 
 @Preview(showBackground = true)

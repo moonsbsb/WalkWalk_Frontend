@@ -1,7 +1,7 @@
 package com.example.pet_walk.data.Repository
 
-import com.example.pet_walk.api.AttendenceApi
-import com.example.pet_walk.api.model.AttendenceResponse
+import com.example.pet_walk.data.remote.api.AttendenceApi
+import com.example.pet_walk.data.remote.model.AttendenceResponse
 import retrofit2.Response
 import javax.inject.Inject
 

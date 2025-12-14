@@ -3,8 +3,8 @@ package com.withwalk.app.ui.screen.chart
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.withwalk.app.api.model.ChartResult
-import com.withwalk.app.api.model.RecordRequest
+import com.example.pet_walk.data.remote.model.ChartResult
+import com.example.pet_walk.data.remote.model.RecordRequest
 import com.withwalk.app.data.Repository.ChartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -3,7 +3,7 @@ package com.withwalk.app.ui.screen.setting
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.withwalk.app.api.model.SettingInfo
+import com.example.pet_walk.data.remote.model.SettingInfo
 import com.withwalk.app.data.Repository.SettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

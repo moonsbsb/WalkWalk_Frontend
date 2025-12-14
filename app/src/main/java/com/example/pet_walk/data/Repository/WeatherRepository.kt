@@ -1,8 +1,7 @@
 package com.withwalk.app.data.Repository
 
-import com.withwalk.app.api.WeatherApi
-import com.withwalk.app.api.model.WeatherResponse
-import retrofit2.Response
+import com.example.pet_walk.data.remote.api.WeatherApi
+import com.example.pet_walk.data.remote.model.WeatherResponse
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(private val api: WeatherApi) {

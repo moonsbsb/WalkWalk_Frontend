@@ -1,6 +1,5 @@
 package com.withwalk.app.ui.screen.chart
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
@@ -37,30 +35,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.withwalk.app.ui.theme.point_red
-import com.withwalk.app.ui.theme.sub_main
 import java.time.LocalDate
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.withwalk.app.ui.theme.dark_grey
-import com.withwalk.app.ui.theme.error_
 import com.withwalk.app.ui.theme.light_grey
 import com.withwalk.app.ui.theme.main
 import com.withwalk.app.ui.theme.middle_grey
 import com.withwalk.app.ui.theme.white
 import com.withwalk.app.R
-import com.withwalk.app.api.TokenManager
+import com.example.pet_walk.core.TokenManager
 import com.withwalk.app.ui.introText
 import com.withwalk.app.ui.screen.homepage.NavBack
 import com.withwalk.app.ui.theme.point_green

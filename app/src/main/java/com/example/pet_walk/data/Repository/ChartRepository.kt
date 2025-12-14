@@ -1,10 +1,9 @@
 package com.withwalk.app.data.Repository
 
-import com.withwalk.app.api.ChartApi
-import com.withwalk.app.api.NetworkModule
-import com.withwalk.app.api.model.ChartResponse
-import com.withwalk.app.api.model.RecordRequest
-import com.withwalk.app.api.model.WalkResponse
+import com.example.pet_walk.data.remote.api.ChartApi
+import com.example.pet_walk.data.remote.model.ChartResponse
+import com.example.pet_walk.data.remote.model.RecordRequest
+import com.example.pet_walk.data.remote.model.WalkResponse
 import retrofit2.Response
 import javax.inject.Inject
 
