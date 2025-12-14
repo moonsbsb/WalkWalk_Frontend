@@ -15,7 +15,6 @@ sealed class Screen(val route: String, val label: String){
 
     object Home: Screen("main/home", "홈")
     object Today: Screen("main/today", "일지")
-    object Gallery: Screen("main/gallery", "갤러리")
     object Chart: Screen("main/chart", "차트")
     object Setting: Screen("main/setting", "설정")
     object Walk: Screen("main/walk", "산책")

@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">WALK WALK</string>
+    <string name="app_name">멍멍</string>
+    <string name="app_name_kr">멍멍</string>
 
     <string name="today_pet">오늘의 %1$s</string>
 
@@ -15,11 +16,9 @@
     <string name="chart_stop">천천히 걸었어요</string>
     <string name="chart_activity_time">활동시간</string>
 
-    <string name="chart_water">음수량</string>
-    <string name="chart_poo">배변횟수</string>
-    
-    <string name="today_pic">오늘의 갤러리</string>
-    <string name="pics">갤러리</string>
+    <string name="chart_fast_dog"># 멈추지않는 강아지</string>
+    <string name="chart_slow_dog"># 여유로운 강아지</string>
+    <string name="chart_soso_dog"># 반반 강아지</string>
 
     <string name="today_walk">오늘의 산책</string>
 

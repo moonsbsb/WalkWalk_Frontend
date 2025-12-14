@@ -33,7 +33,7 @@ fun AppTypography(): Typography {
 
         /* 로고 */
         displayMedium = TextStyle(
-            fontSize = 45.sp,
+            fontSize = 55.sp,
             fontFamily = FontFamily(Font(R.font.gmarketsan_bold))
         ),
 
@@ -55,7 +55,7 @@ fun AppTypography(): Typography {
         ),
 
         labelMedium = TextStyle(
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             fontFamily = FontFamily(Font(R.font.gmarketsans_medium))
         ),
 

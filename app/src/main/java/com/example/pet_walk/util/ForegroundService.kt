@@ -101,6 +101,9 @@ class ForegroundService : Service() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 for (loc in result.locations) {
+                    // 거리 오치(20m) 무시
+                    if( loc.accuracy >20f ) continue
+
                     val latlng = LatLng.from(loc.latitude, loc.longitude)
 
                     pathRoute.add(latlng)
@@ -196,10 +199,8 @@ class ForegroundService : Service() {
                 val speed = segmentDistance / segmentTime
                 if(speed < 0.9f)
                     slowVal += segmentTime
-                    //_slowStep.value += segmentTime + _pauseSlowStep.value
                 else
                     nomalVal += segmentTime
-                    //_nomalStep.value += segmentTime + _pauseNomalStep.value
             }
         }
         val distanceVlaue = total

@@ -22,14 +22,15 @@ android {
         applicationId = "com.withwalk.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 8
-        versionName = "1.0.8"
+        versionCode = 10
+        versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = secret.getProperty("KAKAO_NATIVE_APP_KEY") ?: ""
         manifestPlaceholders["KAKAO_SDK_APP_KEY"] = secret.getProperty("KAKAO_SDK_APP_KEY") ?: ""
 
         buildConfigField("String", "KAKAO_SDK_APP_KEY", "${secret.getProperty("KAKAO_SDK_APP_KEY")}")
+        buildConfigField("String", "WEATHER_ENCODING_KEY", "${secret.getProperty("WEATHER_ENCODING_KEY")}")
     }
     signingConfigs {
         create("release") {
@@ -43,6 +44,7 @@ android {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -123,7 +125,7 @@ dependencies {
 
     // lottie 애니메이션
     implementation("com.airbnb.android:lottie:5.0.2")
-
+    implementation("com.airbnb.android:lottie-compose:5.0.2")
     // 기타 라이브러리
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.kakao.maps.open:android:2.12.8")
