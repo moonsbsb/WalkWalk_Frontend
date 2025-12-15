@@ -58,15 +58,26 @@ import com.withwalk.app.ui.theme.navigation
 import com.withwalk.app.ui.theme.point_red
 import com.withwalk.app.ui.theme.sub_main
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Surface
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pet_walk.ui.screen.attendance.AttendanceScreen
 import com.example.pet_walk.core.TokenManager
 import com.withwalk.app.ui.theme.black
@@ -113,9 +124,17 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_Pet_walk)
         super.onCreate(savedInstanceState)
 
-        val startRoute = intent.getStringExtra("startDestination") ?: "auth"
+        // 상태바, 네비게이션을 compose가 정의
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContent { PetWalkTheme { RootNav(startRoute) } }
+        setContent {
+            PetWalkTheme {
+                val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+                RootNav(
+                    intent.getStringExtra("startDestination") ?: "auth",
+                    windowSizeClass
+                )
+            }
+        }
     }
     override fun onResume() {
         super.onResume()
@@ -138,32 +157,74 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun RootNav(startRoute: String){
+fun RootNav(
+    startRoute: String,
+    windowSizeClass: WindowSizeClass
+) {
     val navController = rememberNavController()
-    val systemUiController = rememberSystemUiController()
+    val currentRoute = currentRoute(navController)
 
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = black,
-            darkIcons = false
-        )
-    }
+    val widthSize = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
-    Scaffold(
-        bottomBar = {
-            val current = currentRoute(navController)
-            if (current in listOf(Screen.Home.route, Screen.Chart.route, Screen.Setting.route, Screen.Attendance.route)) {
-                BottomNavBar(navController)
-            }
-        }
-    ) { innerPadding ->
+    RootScaffold(
+        navController = navController,
+        twoPane = widthSize,
+        currentRoute = currentRoute
+    ) {
         NavHost(
             navController = navController,
-            startDestination = startRoute,
-            modifier = Modifier.padding(innerPadding)
-        ){
+            startDestination = startRoute
+        ) {
             authNav(navController)
-            mainNav(navController)
+            mainNav(navController, widthSize)
+        }
+    }
+}
+
+@Composable
+fun RootScaffold(
+    navController: NavController,
+    twoPane: Boolean,
+    currentRoute: String?,
+    content: @Composable ()-> Unit
+) {
+    val currentRoute = currentRoute(navController)
+    val isAuth = currentRoute?.startsWith("auth") == true
+
+    // 1-pane
+    if(!twoPane){
+        Scaffold(
+            bottomBar = {
+                if(currentRoute in listOf(
+                        Screen.Home.route,
+                        Screen.Chart.route,
+                        Screen.Attendance.route,
+                        Screen.Setting.route
+                    )
+                ){
+                    BottomNavBar(navController)
+                }
+            }
+        ) { innerPadding ->
+            Box(Modifier.padding(innerPadding)){ content() }
+        }
+    }else{
+        // 2-pane
+        Row(Modifier.fillMaxSize()) {
+            if (!isAuth) {
+                NavigationRail(
+                    containerColor = navigation
+                ) {
+                    RailContent(navController)
+                }
+            }
+            Box(
+                Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                content()
+            }
         }
     }
 }
@@ -178,7 +239,9 @@ fun NavGraphBuilder.authNav(navController: NavController){
         composable(Screen.Regist.route) {
             val scroll = rememberScrollState()
             Column(
-                modifier = Modifier.fillMaxSize().verticalScroll(scroll)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scroll)
             ) {
                 RegistScreen(navController){
                     navController.navigate(Screen.Login.route)
@@ -193,7 +256,9 @@ fun NavGraphBuilder.authNav(navController: NavController){
         composable(Screen.Guide.route) {
             val scroll = rememberScrollState()
             Column(
-                modifier = Modifier.fillMaxSize().verticalScroll(scroll)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scroll)
             ) { GuideScreen(navController)  }
         }
         composable(Screen.FindPassword.route) { FindPasswordScreen(navController) }
@@ -201,15 +266,26 @@ fun NavGraphBuilder.authNav(navController: NavController){
 
     }
 }
-fun NavGraphBuilder.mainNav(navController: NavController){
+fun NavGraphBuilder.mainNav(navController: NavController, twoPane: Boolean){
     navigation(
         startDestination = Screen.Home.route,
         route = "main"
     ){
-        composable(Screen.Home.route) { HomeScreen(navController) }
+        composable(Screen.Home.route) {
+            val scroll = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scroll)
+            ) {
+                HomeScreen(navController)
+            }
+
+        }
         composable(Screen.Chart.route) {ChartToday()
             val scroll = rememberScrollState()
-            Column(modifier = Modifier
+            Column(
+                modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scroll)) {
                 ChartToday()
@@ -218,13 +294,18 @@ fun NavGraphBuilder.mainNav(navController: NavController){
         composable(Screen.Attendance.route) {
             val scroll = rememberScrollState()
             Column(
-                modifier = Modifier.fillMaxSize().verticalScroll(scroll)
-            ) { AttendanceScreen()  }
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scroll)
+            ) { AttendanceScreen(twoPane)  }
         }
         composable(Screen.Setting.route) {
             val scroll = rememberScrollState()
             Column(
-                modifier = Modifier.fillMaxSize().background(sub_main).verticalScroll(scroll)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(sub_main)
+                    .verticalScroll(scroll)
             ) { SettingScreen(navController)  }
 
         }
@@ -242,7 +323,9 @@ fun NavGraphBuilder.mainNav(navController: NavController){
                 color = sub_main
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().verticalScroll(scroll)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scroll)
                 ) { AccountUpdateScreen(navController) }
             }
         }
@@ -254,9 +337,62 @@ fun NavGraphBuilder.mainNav(navController: NavController){
     }
 }
 
+//
+@Composable
+fun RailContent(navController: NavController){
+    val items = listOf(
+        Screen.Home,
+        Screen.Chart,
+        Screen.Attendance,
+        Screen.Setting
+    )
+    val currentRoute = currentRoute(navController)
+
+    val isAuth = currentRoute?.startsWith("auth") == true
+
+    if(!isAuth) {
+        items.forEach { screen ->
+            val icon = when (screen) {
+                Screen.Home -> R.drawable.home_icon
+                Screen.Attendance -> R.drawable.today_icon
+                Screen.Setting -> R.drawable.setting_icon
+                else -> R.drawable.chart_icon
+            }
+            NavigationRailItem(
+                icon = { Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = screen.label,
+                    modifier = Modifier.size(25.dp)
+                ) },
+                label = { Text(screen.label, fontSize = 11.sp, lineHeight = 11.sp.times(0.9f)) },
+                colors = NavigationRailItemDefaults.colors(
+                    selectedIconColor = point_red,
+                    unselectedIconColor = nav_inactive,
+                    selectedTextColor = point_red,
+                    unselectedTextColor = nav_inactive,
+                    indicatorColor = Color(0x33FFE3AD)
+                ),
+                selected = currentRoute == screen.route,
+                onClick = {
+                    navController.navigate(screen.route){
+                        // 스택 중복 방지
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+    }
+}
+
 @Composable
 fun BottomNavBar(navController: NavController){
-    val items = listOf(Screen.Home, Screen.Chart, Screen.Attendance, Screen.Setting)
+    val items = listOf(
+        Screen.Home,
+        Screen.Chart,
+        Screen.Attendance,
+        Screen.Setting
+    )
     val currentRoute = currentRoute(navController)
 
     NavigationBar(
