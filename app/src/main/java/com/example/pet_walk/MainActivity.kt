@@ -272,14 +272,15 @@ fun NavGraphBuilder.mainNav(navController: NavController, twoPane: Boolean){
         route = "main"
     ){
         composable(Screen.Home.route) {
-            val scroll = rememberScrollState()
+            /*val scroll = rememberScrollState()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scroll)
             ) {
                 HomeScreen(navController)
-            }
+            }*/
+            HomeScreen(navController)
 
         }
         composable(Screen.Chart.route) {ChartToday()

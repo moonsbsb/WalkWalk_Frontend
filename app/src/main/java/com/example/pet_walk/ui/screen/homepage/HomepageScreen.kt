@@ -14,8 +14,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -181,6 +185,7 @@ fun HomeScreen(navController: NavController, viewModel: AuthViewModel = hiltView
         modifier = Modifier
             .fillMaxSize()
             .background(checkSky())
+            .statusBarsPadding()
     ) {
         val (title, homepageImg, dogBirthDday, walkBtn, source) = createRefs()
         val (backgrounfImage, weatherTxt, weather, speechBubble, warningLight, lottie, sun) = createRefs()
@@ -200,7 +205,9 @@ fun HomeScreen(navController: NavController, viewModel: AuthViewModel = hiltView
                 composition = composition,
                 progress = progress,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.constrainAs(lottie) {
+                modifier = Modifier
+                    .heightIn(max = 100.dp)
+                    .constrainAs(lottie) {
                     top.linkTo(sun.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -253,11 +260,13 @@ fun HomeScreen(navController: NavController, viewModel: AuthViewModel = hiltView
         Image(
             painter = painterResource(dogImg),
             contentDescription = null,
-            modifier = Modifier.constrainAs(homepageImg) {
+            modifier = Modifier
+                .heightIn(max = 150.dp)
+                .constrainAs(homepageImg) {
                 bottom.linkTo(middleGuide, margin = 15.dp)
                 centerHorizontallyTo(parent)
                 width = Dimension.percent(0.85f)
-                height = Dimension.ratio("280:190")
+                height = Dimension.preferredWrapContent
             }
         )
         // 강아지 이름

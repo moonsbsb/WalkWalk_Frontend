@@ -97,7 +97,8 @@ fun ChartToday(viewModel: ChartViewModel = hiltViewModel()){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = sky_morning),
+            .background(color = sky_morning)
+            .padding(bottom = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
@@ -447,6 +448,7 @@ fun SimpleBarChart(nomal: Int, slow: Int) {
             .height(20.dp)
             .clip(RoundedCornerShape(5.dp))
             .background(light_grey)
+
     ) {
         // nomal Step비율
         Box(
