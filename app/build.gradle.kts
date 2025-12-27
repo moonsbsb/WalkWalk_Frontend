@@ -126,6 +126,12 @@ dependencies {
     // lottie 애니메이션
     implementation("com.airbnb.android:lottie:5.0.2")
     implementation("com.airbnb.android:lottie-compose:5.0.2")
+
+    // 화면 레이아웃 조정
+    implementation("androidx.compose.material3.adaptive:adaptive:1.3.0-alpha05")
+    implementation("androidx.compose.material3.adaptive:adaptive-layout:1.3.0-alpha05")
+    implementation("androidx.compose.material3.adaptive:adaptive-navigation:1.3.0-alpha05")
+
     // 기타 라이브러리
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.kakao.maps.open:android:2.12.8")
