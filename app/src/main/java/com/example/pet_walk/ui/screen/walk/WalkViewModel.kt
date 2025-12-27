@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.withwalk.app.R
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.util.ForegroundService
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class WalkViewModel(private val service: ForegroundService): ViewModel() {
     val distance = service.distanceFlow
@@ -15,12 +16,14 @@ class WalkViewModel(private val service: ForegroundService): ViewModel() {
     val slowStep = service.slowStep
     val nomalStep = service.nomalStep
 
-    private var walkService: ForegroundService? = null
 
-    fun getService(service: ForegroundService){
-        this.walkService = service
+    /* 위치 권한 */
+    private val _walkLocationPermission = MutableStateFlow(false)
+    val walkLocationPermission: Boolean = _walkLocationPermission.value
+
+    fun onPermissionResult(grated: Boolean){
+        _walkLocationPermission.value = grated
     }
-
 
     fun timeFormat(time: Long): String{
         val formatTime = time / 1000
