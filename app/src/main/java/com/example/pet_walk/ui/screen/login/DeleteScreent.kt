@@ -43,6 +43,7 @@ import com.withwalk.app.ui.theme.white
 import com.withwalk.app.R
 import com.example.pet_walk.ui.Screen
 import com.example.pet_walk.core.TokenManager
+import com.example.pet_walk.ui.screen.homepage.HomepageViewModel
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.ui.theme.PetWalkTheme
 
@@ -56,13 +57,16 @@ private fun prevDeleteScreen(){
 }
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun DeleteScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
+fun DeleteScreen(navController: NavController,
+                 viewModel: AuthViewModel = hiltViewModel(),
+                 homepageViewModel: HomepageViewModel = hiltViewModel()
+){
     val tokenManager = TokenManager(LocalContext.current)
     val token = tokenManager.getToken()!!
 
-    LaunchedEffect(Unit) { viewModel.getHomePage(token) }
+    LaunchedEffect(Unit) { homepageViewModel.getHomePage(token) }
 
-    val dog by viewModel.dog.collectAsState()
+    val dog by homepageViewModel.dog.collectAsState()
     val _dogProfile = dog.img
     val profile: ProfileImageViewModel = viewModel()
     val dogProfile = profile.dogKind[_dogProfile] ?: R.drawable.transparent
