@@ -3,6 +3,7 @@ package com.withwalk.app.ui.screen.homepage
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pet_walk.domain.WeatherMessageUseCase
 import com.withwalk.app.R
 import com.withwalk.app.data.Repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(private val repository: WeatherRepository): ViewModel() {
+class WeatherViewModel @Inject constructor(private val repository: WeatherRepository, private val service: WeatherMessageUseCase): ViewModel() {
     private val _weather = MutableStateFlow<Map<String, String>>(emptyMap())
     var weather: StateFlow<Map<String, String>> = _weather
     fun getWeather(
@@ -50,7 +51,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     fun instructionBasedonWeight(weight: Float, temperature: String){
         viewModelScope.launch {
-            val pair = repository.getMessage(weight, temperature)
+            val pair = service.instructionBasedonWeight(weight, temperature)
             _weatherMsg.value = pair
         }
     }

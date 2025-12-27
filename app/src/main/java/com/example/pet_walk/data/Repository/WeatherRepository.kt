@@ -5,7 +5,7 @@ import com.example.pet_walk.domain.WeatherMessageUseCase
 import com.example.pet_walk.data.remote.api.WeatherApi
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(private val api: WeatherApi, private val service: WeatherMessageUseCase) {
+class WeatherRepository @Inject constructor(private val api: WeatherApi) {
     /* 날씨 초단기실황조회 */
     suspend fun getWeather(
         serviceKey: String,
@@ -33,8 +33,5 @@ class WeatherRepository @Inject constructor(private val api: WeatherApi, private
         }
 
         return mapOf("" to "")
-    }
-    suspend fun getMessage(weight: Float, temperature: String): Pair<String, Int>{
-        return service.instructionBasedonWeight(weight, temperature)
     }
 }
