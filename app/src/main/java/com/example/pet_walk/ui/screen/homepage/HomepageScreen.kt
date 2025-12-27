@@ -64,6 +64,7 @@ import com.google.android.gms.location.Priority
 import com.withwalk.app.ui.theme.white
 import com.withwalk.app.R
 import com.example.pet_walk.core.TokenManager
+import com.example.pet_walk.ui.screen.homepage.HomepageViewModel
 import com.withwalk.app.ui.MainActivity
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.ui.component.darkRoundBtn
@@ -83,7 +84,7 @@ import java.time.format.DateTimeFormatter
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun HomeScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel(), weatherViewModel: WeatherViewModel = hiltViewModel()){
+fun HomeScreen(navController: NavController, viewModel: HomepageViewModel = hiltViewModel(), weatherViewModel: WeatherViewModel = hiltViewModel()){
     // 뒤로가기 시 종료
     NavBack()
 

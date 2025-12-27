@@ -67,21 +67,6 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository):
         }
     }
 
-    /* 홈페이지 정보 조회 */
-    val dog_ = MutableStateFlow(HomeInfo("", "", R.drawable.dog1.toString(), 1f))
-    val dog: MutableStateFlow<HomeInfo> = dog_
-    fun getHomePage(token: String){
-        viewModelScope.launch {
-            try {
-                val response = repository.getHome(token)
-                if(response.isSuccessful){
-                    dog_.value = HomeInfo(response.body()!!.result.name , response.body()!!.result.birth, response.body()!!.result.img, response.body()!!.result.weight)
-                    Log.d("홈페이지 정보 조회", "조회 성공: ${response.message()} / ${response.body()!!.result.weight}")
-                }else {Log.d("홈페이지 정보 조회", "조회 실패: ${response.code()} - ${response.message()}")}
-            }catch (e: Exception){ Log.e("홈페이지 정보 조회", "에러:  ${e.message}") }
-        }
-    }
-
     /* 유저 개인정보 수정 */
     fun postUserUpdate(token: String, request: UpdateUserRequest){
         viewModelScope.launch {

@@ -40,6 +40,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.withwalk.app.R
 import com.example.pet_walk.core.TokenManager
 import com.example.pet_walk.data.remote.model.RecordRequest
+import com.example.pet_walk.ui.screen.homepage.HomepageViewModel
 import com.withwalk.app.ui.MainActivity
 import com.withwalk.app.ui.component.ProfileImageViewModel
 import com.withwalk.app.ui.screen.chart.ChartViewModel
@@ -71,7 +72,7 @@ private fun PrevWalk(){
 fun WalkResultScreen(
     walkViewModel: WalkViewModel = hiltViewModel(),
     viewModel: ChartViewModel = hiltViewModel(),
-    homeViewModel: AuthViewModel = hiltViewModel()
+    homeViewModel: HomepageViewModel = hiltViewModel()
 ){
     val systemUiController = rememberSystemUiController()
     SideEffect {
@@ -274,24 +275,5 @@ fun WalkResultScreen(
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             )
         }
-    }
-}
-@Composable
-fun DashedDivider() {
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-    ) {
-        val pathEffect = PathEffect.dashPathEffect(
-            floatArrayOf(10.dp.toPx(), 5.dp.toPx()), 0f
-        )
-        drawLine(
-            color = point_green,
-            start = Offset(0f, size.height / 2),
-            end = Offset(size.width, size.height / 2),
-            strokeWidth = 1.dp.toPx(),
-            pathEffect = pathEffect
-        )
     }
 }

@@ -27,11 +27,6 @@ class AuthRepository @Inject constructor (private val api: AuthApi) {
         val response = api.postLogin(loginRequest)
         return response
     }
-    /* 홈 정보 */
-    suspend fun getHome(token: String): Response<HomeResponse>{
-        val response = api.getHome(token)
-        return response
-    }
     /* 개인정보 수정 */
     suspend fun postUpdateUser(token: String, request: UpdateUserRequest): Response<UpdateUserResponse>{
         val response = api.postUpdateUser(token, request)

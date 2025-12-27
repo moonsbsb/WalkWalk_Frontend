@@ -3,6 +3,7 @@ package com.example.pet_walk.core.di
 import com.example.pet_walk.data.remote.api.AttendenceApi
 import com.example.pet_walk.data.remote.api.AuthApi
 import com.example.pet_walk.data.remote.api.ChartApi
+import com.example.pet_walk.data.remote.api.HomepageApi
 import com.example.pet_walk.data.remote.api.SettingApi
 import com.example.pet_walk.data.remote.api.TodayApi
 import dagger.Module
@@ -62,5 +63,12 @@ object NetworkModule {
     // 차트 화면
     fun provideChartApi(@MainRetrofit retrofit: Retrofit): ChartApi {
         return retrofit.create(ChartApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    // 홈 화면
+    fun provideHomepageApi(@MainRetrofit retrofit: Retrofit): HomepageApi {
+        return retrofit.create(HomepageApi::class.java)
     }
 }

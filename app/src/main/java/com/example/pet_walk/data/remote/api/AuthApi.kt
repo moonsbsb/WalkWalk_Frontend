@@ -31,12 +31,6 @@ interface AuthApi {
         @Body request: LoginRequest
     ): Response<LoginResponse>
 
-    /* 홈페이지 */
-    @GET("home/info")
-    suspend fun getHome(
-        @Header("Authorization")token: String
-    ): Response<HomeResponse>
-
     /* 개인정보 수정 */
     @PATCH("user/update")
     suspend fun postUpdateUser(
