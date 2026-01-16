@@ -121,7 +121,6 @@ fun DeleteScreen(navController: NavController,
 
         TextButton(onClick = {
             /* 인증메일 보내는 API 연결 */
-            Log.d("탈퇴 인증코드", "클릭됨")
             viewModel.verifyCode(token)
             navController.navigate(Screen.CheckNumber.route)
         }

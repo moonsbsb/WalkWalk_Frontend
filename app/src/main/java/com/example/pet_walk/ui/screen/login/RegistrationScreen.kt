@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,15 +80,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-/*@Preview
-@Composable
-fun preRegistScreen(){
-    val navController = rememberNavController()
-    PetWalkTheme {
-        RegistScreen(navController)
-    }
-}*/
-
 
 @Composable
 fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel(), onBack: ()->Unit){
@@ -97,12 +89,38 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
 
     Log.d("카카오", "넘겨받은 이메일 확인: $userEmail")
 
-    //val repository = AuthRepository()
-    //val factory = AuthViewModelFactory(repository)
-    //val viewModel: AuthViewModel = viewModel(factory = factory)
-    //val viewModel: AuthViewModel = hiltViewModel()
 
+    var dogName by remember { mutableStateOf("") }
+    var img by remember { mutableStateOf("") }
+    var dogWeight by remember { mutableStateOf("") }
+    var dogAge by remember { mutableStateOf("") }
+    var dogBirth by remember { mutableStateOf("") }
+    var show by remember { mutableStateOf(false) }
+    var privacyCheck by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
     val message by viewModel.message.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+
+    LaunchedEffect(message) {
+        when (message) {
+            "Success" -> {
+                navController.navigate("${Screen.Complete.route}/$dogName/$img"){ popUpTo(0) }
+                viewModel.clearMessage()
+            }
+            "EMAIL_DUPLICATED" -> {
+                Toast.makeText(context, "이미 가입된 이메일입니다.", Toast.LENGTH_SHORT).show()
+                viewModel.clearMessage()
+            }
+        }
+        /*if(message == "Success"){
+            navController.navigate("${Screen.Complete.route}/$dogName/$img"){ popUpTo(0) }
+        } else if(message.isNotEmpty()){
+            Toast.makeText(context, "이메일이 중복되었습니다.", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(context, "한 번 더 눌러주세요!", Toast.LENGTH_SHORT).show()
+        }*/
+    }
 
     BackHandler {
         onBack()
@@ -125,14 +143,13 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.weight(0.4f))
-        var img by remember { mutableStateOf("") }
+
         SelectImage(
             modifier = Modifier.fillMaxWidth(1f),
             onSelect = { img = it }
         )
 
         // 이름
-        var dogName by remember { mutableStateOf("") }
         CustomLabelText(stringResource(R.string.name), modifier = Modifier.fillMaxWidth())
         CustomUserDogField(
             value = dogName,
@@ -142,7 +159,6 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
         )
 
         // 몸무게
-        var dogWeight by remember { mutableStateOf("") }
         CustomLabelText(stringResource(R.string.weight), modifier = Modifier.fillMaxWidth())
         CustomUserDogField(
             value = dogWeight,
@@ -156,7 +172,6 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
         )
 
         // 나이
-        var dogAge by remember { mutableStateOf("") }
         CustomLabelText(stringResource(R.string.age), modifier = Modifier.fillMaxWidth())
         CustomUserDogField(
             value = dogAge,
@@ -170,8 +185,6 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
         )
 
         // 생일
-        var dogBirth by remember { mutableStateOf("") }
-        var show by remember { mutableStateOf(false) }
         CustomLabelText(stringResource(R.string.birth), modifier = Modifier.fillMaxWidth())
         Box(
             modifier = Modifier
@@ -203,7 +216,6 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
         }
 
         // 개인정보 동의
-        var privacyCheck by remember { mutableStateOf(false) }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -235,7 +247,6 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
 
 
         // 완료 버튼
-        val context = LocalContext.current
         val lieBirth = try {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val birthDate = LocalDate.parse(dogBirth, formatter)
@@ -250,6 +261,7 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
                 .heightIn(min = 50.dp),
             shape = RoundedCornerShape(5.dp),
             colors = ButtonDefaults.buttonColors(containerColor = point_red),
+            enabled = !loading,
             onClick = {
                 val errorMsg = when {
                     img.isEmpty() -> "강아지의 프로필을 설정해주세요"
@@ -279,13 +291,6 @@ fun RegistScreen(navController: NavController, viewModel: AuthViewModel = hiltVi
                         )
                     )
                     viewModel.postAuth(request)
-                    if(message == "Success"){
-                        navController.navigate("${Screen.Complete.route}/$dogName/$img"){ popUpTo(0) }
-                    } else if(message.isNotEmpty()){
-                        Toast.makeText(context, "이메일이 중복되었습니다.", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(context, "한 번 더 눌러주세요!", Toast.LENGTH_SHORT).show()
-                    }
                 }
             }
         ){
