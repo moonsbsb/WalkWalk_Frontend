@@ -24,20 +24,27 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository):
     /* 회원가입 */
     val _message = MutableStateFlow<String>("")
     var message: StateFlow<String> = _message
+
+    val loading = MutableStateFlow(false)
     fun postAuth(authRequest: AuthRequest){
+        if(loading.value) return
         viewModelScope.launch {
+            loading.value = true
             try{
                 val response = repository.postAuth(authRequest)
 
                 if(response.isSuccessful) {
                     _message.value = response.body()!!.message
                     Log.d("회원가입", "성공: ${response.body()!!.message}")
-                }
-                else{
+                } else{
                     Log.d("회원가입", "응답실패: ${response.code()} - ${response.message()}")
-                    _message.value = response.errorBody().toString()
+                    _message.value = "EMAIL_DUPLICATED"
                 }
-            } catch (e:Exception) { Log.e("회원가입", "에러: ${e.message}") }
+            } catch (e:Exception) {
+                _message.value = "NETWORK_ERROR"
+            } finally {
+                loading.value = false
+            }
 
         }
     }
@@ -157,5 +164,12 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository):
             }catch (e: Exception) { Log.e("카카오 로그인", "에러: ${e.message}")}
 
         }
+    }
+
+    fun clearMessage() {
+        _message.value = ""
+    }
+    fun clearKakaoMessage() {
+        _kakaoMessage.value = ""
     }
 }

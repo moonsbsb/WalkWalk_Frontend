@@ -3,6 +3,7 @@ package com.withwalk.app.ui.screen.login
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -51,23 +52,72 @@ import com.example.pet_walk.ui.Screen
 import com.example.pet_walk.core.TokenManager
 import com.example.pet_walk.data.remote.model.LoginRequest
 import com.withwalk.app.ui.component.CustomUserTextField
+import com.withwalk.app.ui.screen.homepage.NavBack
 import com.withwalk.app.ui.theme.PetWalkTheme
 
 
-@Preview(showBackground = true)
-@Composable
-fun prev(){
-    val navController = rememberNavController()
-    PetWalkTheme {
-        LoginScreen(navController)
-    }
-}
 private val TAG = "카카오 로그인"
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()){
+
+    NavBack()
+
     val context = LocalContext.current
+
+    val token by viewModel.token.collectAsState()
+    val message by viewModel.message.collectAsState()
+
+    val kakaoMsg by viewModel.kakaoMessage.collectAsState()
+    val kakaoEmail by viewModel.kakaoEmail.collectAsState()
+    Log.d(TAG, "카카오 메세지: ${kakaoMsg}")
+    Log.d(TAG, "메세지: ${message}")
+    LaunchedEffect(token) {
+        if(token.isNotEmpty()) {
+            val tokenManager = TokenManager(context)
+            tokenManager.saveToken("Bearer $token")
+            navController.navigate(Screen.Home.route) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
+    LaunchedEffect(kakaoMsg) {
+        when (kakaoMsg) {
+            "Success" -> {
+                TokenManager(context).saveToken("Bearer $token")
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+            "KAKAO_NEW" -> {
+                navController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("userEmail", kakaoEmail)
+                navController.navigate(Screen.Regist.route)
+            }
+            "Empty" -> {
+                navController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("userEmail", kakaoEmail)
+                navController.navigate(Screen.Regist.route)
+            }
+        }
+        viewModel.clearKakaoMessage()
+    }
+
+    LaunchedEffect(message) {
+        when (message) {
+            "KAKAO_ACCOUNT" -> {
+                Toast.makeText(context, "카카오로 가입된 계정입니다.\n카카오 로그인을 이용해주세요.", Toast.LENGTH_SHORT).show()
+                viewModel.clearMessage()
+            }
+
+            "INVALID_CREDENTIALS" -> {
+                Toast.makeText(context, "이메일 또는 비밀번호가 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
+                viewModel.clearMessage()
+            }
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -162,8 +212,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                 text = "비밀번호나 아이디가 일치하지않습니다.", style = MaterialTheme.typography.labelSmall, color = error_)
         }
 
-
-        val token by viewModel.token.collectAsState()
         Button(
             modifier = Modifier
                 .constrainAs(loginBox) {
@@ -178,15 +226,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                 viewModel.postLogin(requst)
             }
         ) {
-            LaunchedEffect(token) {
-                if(token.isNotEmpty()) {
-                    val tokenManager = TokenManager(context)
-                    tokenManager.saveToken("Bearer $token")
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
-            }
             Text(text = stringResource(R.string.login), style = MaterialTheme.typography.bodyMedium)
         }
         TextButton(
@@ -203,31 +242,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
                 style = MaterialTheme.typography.labelMedium)
         }
 
-        val kakaoMsg by viewModel.kakaoMessage.collectAsState()
-        val kakaoToken by viewModel.token.collectAsState()
-
-        var loginTriggered by remember { mutableStateOf(false) }
-        val kakaoEmail by viewModel.kakaoEmail.collectAsState()
-
-        if (loginTriggered) {
-            LaunchedEffect(kakaoMsg) {
-                when (kakaoMsg) {
-                    "Success" -> {
-                        val tokenManager = TokenManager(context)
-                        tokenManager.saveToken("Bearer $token")
-                        navController.navigate(Screen.Home.route)
-                    }
-                    "Empty" -> {
-                        navController.currentBackStackEntry?.savedStateHandle?.set("userEmail", kakaoEmail)
-                        navController.navigate(Screen.Regist.route)
-                    }
-                    "Error" -> {
-                        Log.d("카카오", "메세지: Error")
-                    }
-                }
-            }
-        }
-
         IconButton(
             modifier = Modifier
                 .constrainAs(loginWithKakao) {
@@ -238,7 +252,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = hiltVie
 
             onClick = {
                 /* 카카로오 로그인 */
-                loginTriggered = true
                 LoginWithKakao(context, navController, viewModel)
             }
         ) {
@@ -264,7 +277,6 @@ private fun LoginWithKakao(context: Context, navController: NavController, viewM
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
                 Log.e(TAG, "카카오톡으로 로그인 실패", error)
-                // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우, 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
                 if (error is ClientError && error.reason == ClientErrorCause.Cancelled) { return@loginWithKakaoTalk }
                 UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
             } else if (token != null) {
