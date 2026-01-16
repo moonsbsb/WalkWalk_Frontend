@@ -60,13 +60,18 @@ import com.withwalk.app.ui.theme.sub_main
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -124,7 +129,11 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_Pet_walk)
         super.onCreate(savedInstanceState)
 
-        // 상태바, 네비게이션을 compose가 정의
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.BLACK)
+        )
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PetWalkTheme {
@@ -166,17 +175,23 @@ fun RootNav(
 
     val widthSize = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 
-    RootScaffold(
-        navController = navController,
-        twoPane = widthSize,
-        currentRoute = currentRoute
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
     ) {
-        NavHost(
+        RootScaffold(
             navController = navController,
-            startDestination = startRoute
+            twoPane = widthSize,
+            currentRoute = currentRoute
         ) {
-            authNav(navController)
-            mainNav(navController, widthSize)
+            NavHost(
+                navController = navController,
+                startDestination = startRoute
+            ) {
+                authNav(navController)
+                mainNav(navController, widthSize)
+            }
         }
     }
 }
@@ -272,14 +287,6 @@ fun NavGraphBuilder.mainNav(navController: NavController, twoPane: Boolean){
         route = "main"
     ){
         composable(Screen.Home.route) {
-            /*val scroll = rememberScrollState()
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scroll)
-            ) {
-                HomeScreen(navController)
-            }*/
             HomeScreen(navController)
 
         }
@@ -287,8 +294,8 @@ fun NavGraphBuilder.mainNav(navController: NavController, twoPane: Boolean){
             val scroll = rememberScrollState()
             Column(
                 modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scroll)) {
+                    .fillMaxSize()
+                    .verticalScroll(scroll)) {
                 ChartToday()
             }
         }
