@@ -103,8 +103,8 @@ class WalkActivity : AppCompatActivity() {
             service = null
         }
     }
-    private val statusBarColor = Color.BLACK // Compose의 black 색상에 대응되는 Android Color
-    private val useDarkIcons = false // Compose의 darkIcons = false에 대응
+    private val statusBarColor = Color.BLACK
+    private val useDarkIcons = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -236,16 +236,16 @@ class WalkActivity : AppCompatActivity() {
     private fun observeServiceFlows(){
         lifecycleScope.launch {
             walkViewModel.path.collect { path ->
-                if (path.size >= 2) {
-                    updateRoute(path)
-                    val lastPos = path.last()
-                    kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(lastPos, 16))
+                if (!::kakaoMap.isInitialized || path.size < 2) return@collect
 
-                    binding.walkLottie.visibility = View.GONE
-                    binding.walkLottie.pauseAnimation()
-                    visibleAnimation = true
-                    service?.startTimer()
-                }
+                updateRoute(path)
+                val lastPos = path.last()
+                kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(lastPos, 16))
+
+                binding.walkLottie.visibility = View.GONE
+                binding.walkLottie.pauseAnimation()
+                visibleAnimation = true
+                service?.startTimer()
             }
         }
 
